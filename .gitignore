@@ -1,0 +1,17 @@
+# regenerable / local-only
+node_modules/
+mem0_local_storage/
+.mem0_history.db
+.agentops/
+*.db
+*.db-wal
+*.db-shm
+demo.db.bak-*
+.env
+dist/
+bin/
+whatbark-files/
+*.log
+*-tokens.json
+.DS_Store
+scratch-headless/

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>whatbark</title>
+  <link rel="icon" href="avatars/boss.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="shell">
+  <nav id="rail">
+    <div class="rail-brand">wb</div>
+    <div id="rail-nav">
+      <button class="rail-btn active" data-view="chat" data-i18n-title="Chat" title="Chat" aria-label="Chat">
+        <svg class="rail-ic" viewBox="0 0 16 16" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2 2h12v10H2zM3 12h2v1H4v1H3zM4 6h2v2H4zM7 6h2v2H7zM10 6h2v2H10z"/></svg>
+      </button>
+      <button class="rail-btn" data-view="admin" id="rail-admin" hidden data-i18n-title="Admin" title="Admin" aria-label="Admin">
+        <svg class="rail-ic" viewBox="0 0 16 16" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M6 1h4v4H6zM7 5h2v2H7zM3 7h10v2H3zM3 9h2v2H3zM11 9h2v2H11zM2 11h4v4H2zM10 11h4v4H10z"/></svg>
+      </button>
+      <button class="rail-btn" data-view="settings" data-i18n-title="Settings" title="Settings" aria-label="Settings">
+        <svg class="rail-ic" viewBox="0 0 16 16" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 3h12v2H2zM9 2h4v4H9zM2 7h12v2H2zM3 6h4v4H3zM2 11h12v2H2zM9 10h4v4H9z"/></svg>
+      </button>
+    </div>
+    <div class="rail-bottom">
+      <div id="ws-dot" class="ws-dot" data-i18n-title="WS disconnected" title="WS disconnected"></div>
+      <div id="rail-avatar" data-i18n-title="Not signed in" title="Not signed in">?</div>
+    </div>
+  </nav>
+  <div id="main">
+    <div id="view-login" class="view">
+      <div class="card login-card">
+        <h3 data-i18n="whatbark login">whatbark login</h3>
+        <p class="note" data-i18n="Sign in with an employee token or the boss admin token.">Sign in with an employee token or the boss admin token.</p>
+        <div id="login-area"></div>
+      </div>
+    </div>
+    <div id="view-chat" class="view">
+      <section id="block-chat" data-block="chat" class="block"></section>
+    </div>
+    <div id="view-admin" class="view">
+      <nav id="tabs">
+        <button data-tab="org" data-i18n="Organization">Organization</button>
+        <button data-tab="wflow" data-i18n="Workflows">Workflows</button>
+        <button data-tab="projects" data-i18n="Projects">Projects</button>
+        <button data-tab="status" data-i18n="Status">Status</button>
+        <button data-tab="inbox" data-i18n="Inbox">Inbox</button>
+        <button data-tab="sched" data-i18n="Scheduled">Scheduled</button>
+      </nav>
+      <div class="admin-main">
+        <section id="block-org" data-block="org" class="block"></section>
+        <section id="block-wflow" data-block="wflow" class="block"></section>
+        <section id="block-projects" data-block="projects" class="block"></section>
+        <section id="block-status" data-block="status" class="block"></section>
+        <section id="block-inbox" data-block="inbox" class="block"></section>
+        <section id="block-sched" data-block="sched" class="block"></section>
+      </div>
+    </div>
+    <div id="view-settings" class="view">
+      <section id="block-settings" data-block="settings" class="block active"></section>
+    </div>
+  </div>
+</div>
+<!-- S15: mobile bottom nav (display:none on desktop; layout in style.css @media max-width:767px) -->
+<nav id="bottom-nav">
+  <button class="nav-btn active" data-view="chat" data-i18n="Chat">Chat</button>
+  <button class="nav-btn" data-view="admin" id="nav-admin" hidden data-i18n="Admin">Admin</button>
+  <button class="nav-btn" data-view="settings" data-i18n="Settings">Settings</button>
+</nav>
+<div id="toast"></div>
+<div id="boot-wait" data-i18n="Loading whatbark… (if this persists, refresh the page or check that the server is running)">Loading whatbark… (if this persists, refresh the page or check that the server is running)</div>
+<script src="core.js"></script>
+<script src="blocks-chat.js"></script>
+<script src="blocks-servers.js"></script>
+<script src="blocks-settings.js"></script>
+<script src="blocks-org.js"></script>
+<script src="blocks-wflow.js"></script>
+<script src="blocks-projects.js"></script>
+<script src="blocks-status.js"></script>
+<script src="blocks-inbox.js"></script>
+<script src="blocks-sched.js"></script>
+<script>WB.init();</script>
+</body>
+</html>

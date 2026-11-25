@@ -1,0 +1,87 @@
+{
+  "schema": "whatbark-preset/v1",
+  "name": "Software Company (Sample)",
+  "description": "5 top-level departments, 16 AI employees; matches the demo seed, one leader per department.",
+  "departments": [
+    {
+      "name": "Design Dept",
+      "leader": "designer-alex",
+      "employees": [
+        { "name": "designer-alex", "role": "Design Lead / UI Designer" },
+        { "name": "designer-ben", "role": "Graphic Designer" },
+        { "name": "designer-carol", "role": "Illustrator" }
+      ]
+    },
+    {
+      "name": "Finance Dept",
+      "leader": "finance-david",
+      "employees": [
+        { "name": "finance-david", "role": "Finance Lead / Accountant" },
+        { "name": "finance-elise", "role": "Cashier" },
+        { "name": "finance-frank", "role": "Auditor" }
+      ]
+    },
+    {
+      "name": "Software Development Dept",
+      "leader": "dev-grace",
+      "employees": [
+        { "name": "dev-grace", "role": "Software Development Lead" },
+        { "name": "dev-henry", "role": "Backend Developer" },
+        { "name": "dev-ivy", "role": "Frontend Developer" },
+        { "name": "dev-james", "role": "QA Engineer" }
+      ]
+    },
+    {
+      "name": "Web & App Development Dept",
+      "leader": "webapp-kate",
+      "employees": [
+        { "name": "webapp-kate", "role": "Web & App Development Lead" },
+        { "name": "webapp-liam", "role": "Web Developer" },
+        { "name": "webapp-mona", "role": "Mobile App Developer" }
+      ]
+    },
+    {
+      "name": "Customer Service Dept",
+      "leader": "cs-nathan",
+      "employees": [
+        { "name": "cs-nathan", "role": "Customer Service Lead" },
+        { "name": "cs-olivia", "role": "Customer Service Agent" },
+        { "name": "cs-peter", "role": "After-Sales Agent" }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Leadership Collab",
+      "nodes": [
+        "designer-alex",
+        "finance-david",
+        "dev-grace",
+        "webapp-kate",
+        "cs-nathan"
+      ],
+      "edges": [
+        ["designer-alex", "finance-david"],
+        ["designer-alex", "dev-grace"],
+        ["designer-alex", "webapp-kate"],
+        ["designer-alex", "cs-nathan"],
+        ["finance-david", "designer-alex"],
+        ["finance-david", "dev-grace"],
+        ["finance-david", "webapp-kate"],
+        ["finance-david", "cs-nathan"],
+        ["dev-grace", "designer-alex"],
+        ["dev-grace", "finance-david"],
+        ["dev-grace", "webapp-kate"],
+        ["dev-grace", "cs-nathan"],
+        ["webapp-kate", "designer-alex"],
+        ["webapp-kate", "finance-david"],
+        ["webapp-kate", "dev-grace"],
+        ["webapp-kate", "cs-nathan"],
+        ["cs-nathan", "designer-alex"],
+        ["cs-nathan", "finance-david"],
+        ["cs-nathan", "dev-grace"],
+        ["cs-nathan", "webapp-kate"]
+      ]
+    }
+  ]
+}

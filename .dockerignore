@@ -1,0 +1,15 @@
+.git
+.gitignore
+.agentops
+.mem0_history.db
+mem0_local_storage
+.tasks
+STATE.md
+*.db
+*.db-wal
+*.db-shm
+*.log
+bin/
+dist/
+.env
+.DS_Store

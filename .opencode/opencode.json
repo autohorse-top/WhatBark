@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "default_agent": "dev-coordinator",
+  "permission": {
+    "read": { "*": "allow", "~/.config/opencode/**": "deny" },
+    "edit": { "*": "allow", "~/.config/opencode/**": "deny" },
+    "bash": { "*": "allow", "~/.config/opencode/**": "deny" },
+    "external_directory": { "*": "allow", "~/.config/opencode/**": "deny" },
+    "webfetch": "deny",
+    "websearch": "deny"
+  }
+}

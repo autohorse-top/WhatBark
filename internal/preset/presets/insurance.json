@@ -1,0 +1,85 @@
+{
+  "schema": "whatbark-preset/v1",
+  "name": "Insurance Brokerage (Sample)",
+  "description": "Insurance brokerage: life & health advisory, property insurance advisory, underwriting & reinsurance, claims support, and customer service & operations — 5 departments, 14 AI employees.",
+  "departments": [
+    {
+      "name": "Life & Health Advisory Dept",
+      "leader": "life-charlie",
+      "employees": [
+        { "name": "life-charlie", "role": "Department Head" },
+        { "name": "life-diane", "role": "Senior Insurance Advisor" }
+      ]
+    },
+    {
+      "name": "Property Insurance Advisory Dept",
+      "leader": "pica-eugene",
+      "employees": [
+        { "name": "pica-eugene", "role": "Department Head" },
+        { "name": "pica-freya", "role": "Auto Insurance Specialist" },
+        { "name": "pica-gavin", "role": "Corporate Risk Advisor" }
+      ]
+    },
+    {
+      "name": "Underwriting & Reinsurance Dept",
+      "leader": "underwrite-heidi",
+      "employees": [
+        { "name": "underwrite-heidi", "role": "Chief Underwriter" },
+        { "name": "underwrite-igor", "role": "Underwriting Specialist" },
+        { "name": "underwrite-june", "role": "Reinsurance Specialist" }
+      ]
+    },
+    {
+      "name": "Claims Support Dept",
+      "leader": "claim-kevin",
+      "employees": [
+        { "name": "claim-kevin", "role": "Claims Supervisor" },
+        { "name": "claim-laura", "role": "Claims Specialist" },
+        { "name": "claim-marcus", "role": "Claims Documentation Specialist" }
+      ]
+    },
+    {
+      "name": "Customer Service & Operations Dept",
+      "leader": "svc-nancy",
+      "employees": [
+        { "name": "svc-nancy", "role": "Operations Supervisor" },
+        { "name": "svc-oscar", "role": "Customer Service Agent" },
+        { "name": "svc-pamela", "role": "Policy Operations Specialist" }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Leadership Collab",
+      "nodes": [
+        "life-charlie",
+        "pica-eugene",
+        "underwrite-heidi",
+        "claim-kevin",
+        "svc-nancy"
+      ],
+      "edges": [
+        ["life-charlie", "pica-eugene"],
+        ["life-charlie", "underwrite-heidi"],
+        ["life-charlie", "claim-kevin"],
+        ["life-charlie", "svc-nancy"],
+        ["pica-eugene", "life-charlie"],
+        ["pica-eugene", "underwrite-heidi"],
+        ["pica-eugene", "claim-kevin"],
+        ["pica-eugene", "svc-nancy"],
+        ["underwrite-heidi", "life-charlie"],
+        ["underwrite-heidi", "pica-eugene"],
+        ["underwrite-heidi", "claim-kevin"],
+        ["underwrite-heidi", "svc-nancy"],
+        ["claim-kevin", "life-charlie"],
+        ["claim-kevin", "pica-eugene"],
+        ["claim-kevin", "underwrite-heidi"],
+        ["claim-kevin", "svc-nancy"],
+        ["svc-nancy", "life-charlie"],
+        ["svc-nancy", "pica-eugene"],
+        ["svc-nancy", "underwrite-heidi"],
+        ["svc-nancy", "claim-kevin"]
+      ]
+    }
+  ]
+}

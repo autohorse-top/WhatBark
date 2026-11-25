@@ -1,0 +1,693 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0; background: #f5f7fa; color: #222; overflow: hidden;
+}
+
+/* S15: mobile bottom navigation — hidden on desktop; the mobile layout lives
+   in the @media (max-width: 767px) block at the bottom (same expression as
+   core.js matchMedia). #thread-back is a mobile-only thread-head button:
+   hidden on desktop so it takes no thread-head layout. */
+#bottom-nav { display: none; }
+#thread-back { display: none; }
+
+/* ---------- shell: left rail + main ---------- */
+#shell { display: flex; height: 100vh; }
+#rail {
+  width: 64px; flex-shrink: 0;
+  /* S11c: user asked for a gradient rail (dark slate → deep indigo, vertical) */
+  background: linear-gradient(180deg, #111827 0%, #1f2937 40%, #312e81 100%);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 0; gap: 10px;
+}
+.rail-brand { color: #fff; font-weight: 700; font-size: 16px; }
+#rail-nav { display: flex; flex-direction: column; gap: 8px; }
+.rail-btn {
+  width: 48px; height: 44px; padding: 0; border: none; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; color: #9ca3af; cursor: pointer;
+}
+.rail-btn .rail-ic { width: 22px; height: 22px; display: block; }
+.rail-btn:hover { background: #374151; color: #fff; }
+.rail-btn.active { background: #2563eb; color: #fff; }
+.rail-btn[hidden] { display: none; }
+.rail-bottom { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+#rail-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: #374151; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  cursor: pointer; /* S12: click opens the avatar picker */
+}
+.ws-dot { width: 10px; height: 10px; border-radius: 50%; background: #6b7280; }
+.ws-dot.on { background: #22c55e; }
+
+#main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+.view { display: none; flex: 1; min-height: 0; }
+#view-login.active { display: flex; align-items: center; justify-content: center; }
+#view-chat.active { display: flex; }
+#view-admin.active { display: flex; flex-direction: column; }
+#view-settings.active { display: block; overflow-y: auto; }
+.login-card { width: 360px; }
+
+/* ---------- admin sub-tabs ---------- */
+#tabs {
+  display: flex; background: #fff; border-bottom: 1px solid #e5e7eb;
+  overflow-x: auto; flex-shrink: 0;
+}
+#tabs button {
+  border: none; background: none; padding: 12px 14px; font-size: 14px;
+  cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap;
+}
+#tabs button.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+.admin-main, .settings-main { flex: 1; overflow-y: auto; padding: 16px; }
+
+.block { display: none; }
+.block.active { display: block; }
+/* S11c: the chat view's single block child must be a flex row, otherwise
+   .chat-pane (300px) and .thread-pane stack vertically (user-reported). */
+#block-chat.active { display: flex; flex: 1; min-width: 0; }
+
+/* ---------- chat view ---------- */
+.chat-pane {
+  width: 300px; flex-shrink: 0; background: #fff;
+  border-right: 1px solid #e5e7eb; display: flex; flex-direction: column;
+}
+/* S14: search row + new-group button */
+.conv-search-row { display: flex; gap: 6px; align-items: center; margin: 10px; }
+.conv-search-row #conv-search { flex: 1; min-width: 0; }
+#conv-new-group {
+  width: 32px; height: 32px; flex-shrink: 0; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: #1f2937;
+  border: 2px solid #1f2937; border-radius: 0;
+  box-shadow: 2px 2px 0 #1f2937;
+  cursor: pointer;
+  font-size: 18px; font-weight: 700; line-height: 1;
+}
+#conv-new-group:hover { background: #f3f4f6; }
+#conv-new-group:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1f2937; }
+/* S14: new-group dialog (pixel style: right angles + 2px hard border + hard shadow) */
+.ng-overlay {
+  position: fixed; inset: 0; z-index: 130;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+.ng-card {
+  width: min(420px, 92vw); max-height: 80vh; overflow-y: auto;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 4px 4px 0 #1f2937;
+  padding: 12px;
+}
+.ng-title { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+.ng-card #ng-name { width: 100%; }
+.ng-subtitle { font-size: 12px; color: #6b7280; margin: 8px 0 4px; }
+.ng-members { max-height: 240px; overflow-y: auto; border: 1px solid #e5e7eb; }
+.ng-member {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; font-size: 13px; cursor: pointer;
+  border-bottom: 1px solid #f0f1f3;
+}
+.ng-member:last-child { border-bottom: none; }
+.ng-member input { margin: 0; }
+.ng-member:has(input:disabled) { cursor: default; background: #f9fafb; }
+.ava.ng-ava { width: 24px; height: 24px; font-size: 11px; }
+.ng-type-row { display: flex; gap: 16px; margin-bottom: 8px; }
+.ng-type { display: flex; align-items: center; gap: 4px; font-size: 13px; cursor: pointer; }
+.ng-type input { margin: 0; }
+.ng-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+/* S17: group settings dialog (pixel style, same pattern as .ng-*) */
+.gs-overlay {
+  position: fixed; inset: 0; z-index: 131;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+.gs-card {
+  width: min(420px, 92vw); max-height: 80vh; overflow-y: auto;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 4px 4px 0 #1f2937;
+  padding: 12px;
+}
+.gs-title-row { display: flex; align-items: center; justify-content: space-between; }
+.gs-title { font-weight: 700; font-size: 14px; }
+.gs-close {
+  border: 0; background: none; font-size: 16px; line-height: 1;
+  color: #6b7280; cursor: pointer; padding: 0 4px;
+}
+.gs-close:hover { color: #dc2626; }
+.gs-subtitle { font-size: 12px; color: #6b7280; margin: 8px 0 4px; }
+.gs-members { max-height: 240px; overflow-y: auto; border: 1px solid #e5e7eb; }
+.gs-member {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; font-size: 13px;
+  border-bottom: 1px solid #f0f1f3;
+}
+.gs-member:last-child { border-bottom: none; }
+.gs-member-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ava.gs-ava { width: 24px; height: 24px; font-size: 11px; }
+.tag.creator { background: #fef3c7; color: #92400e; }
+.gs-add-row { display: flex; gap: 8px; margin-top: 4px; }
+.gs-add-row select { flex: 1; }
+.gs-prefs { margin-top: 10px; border-top: 1px solid #e5e7eb; padding-top: 4px; }
+.gs-pref {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; font-size: 13px; cursor: pointer;
+}
+.gs-pref input[type="checkbox"] { display: none; }
+.gs-switch {
+  flex-shrink: 0; position: relative; width: 34px; height: 18px;
+  background: #d1d5db; border: 2px solid #1f2937; border-radius: 0;
+}
+.gs-switch::after {
+  content: ""; position: absolute; width: 10px; height: 10px;
+  top: 1px; left: 1px; background: #fff; border: 1px solid #1f2937;
+  transition: left 0.15s;
+}
+.gs-pref input:checked + .gs-switch { background: #2563eb; }
+.gs-pref input:checked + .gs-switch::after { left: 17px; }
+.gs-hint { font-size: 11px; color: #9ca3af; padding: 4px 0 2px; }
+/* S17: group muted badge (replaces the unread count) */
+.tag.muted-tag { background: #f3f4f6; color: #6b7280; }
+/* S17: "ignored" section at the bottom of the conversation list (grayed out, still openable) */
+.gs-ignored-header {
+  padding: 8px 10px 4px; font-size: 11px; color: #9ca3af;
+  border-top: 1px solid #e5e7eb; margin-top: 4px;
+}
+.conv.ignored { opacity: 0.55; }
+/* S26: group settings — rename input row */
+.gs-rename-row { display: flex; gap: 8px; margin-top: 4px; }
+.gs-rename-row input {
+  flex: 1; min-width: 0; padding: 4px 8px; font-size: 13px;
+  border: 1px solid #d1d5db; background: #fff;
+}
+.gs-rename-row input:focus { outline: 1px solid #2563eb; border-color: #2563eb; }
+/* S26: group settings — inline "remove/leave" mini button on member rows */
+.gs-remove-btn {
+  flex-shrink: 0; border: 1px solid #dc2626; background: #fff; color: #dc2626;
+  font-size: 11px; padding: 1px 8px; cursor: pointer; line-height: 1.4;
+}
+.gs-remove-btn:hover { background: #dc2626; color: #fff; }
+/* S26: group settings — danger zone (delete group) */
+.gs-danger-zone { margin-top: 12px; border-top: 1px solid #fecaca; padding-top: 8px; }
+.gs-danger-zone .btn.danger { width: 100%; }
+/* S30: group settings — task policy (default priority / SLA timeout) */
+.gs-policy-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.gs-policy-label { flex: 1; font-size: 13px; }
+.gs-policy-row input[type="number"] {
+  width: 110px; padding: 4px 8px; font-size: 13px;
+  border: 1px solid #d1d5db; background: #fff;
+}
+.gs-policy-row input[type="number"]:focus { outline: 1px solid #2563eb; border-color: #2563eb; }
+/* S17: group thread header right-side button group (from S24 includes "Tasks" + "…") */
+.thread-actions { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; }
+
+/* S24: group task kanban dialog (pixel style, same pattern as .gs-*) */
+.gk-overlay {
+  position: fixed; inset: 0; z-index: 131;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+.gk-card {
+  width: min(420px, 92vw); max-height: 80vh; overflow-y: auto;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 4px 4px 0 #1f2937;
+  padding: 12px;
+}
+.gk-title-row { display: flex; align-items: center; justify-content: space-between; }
+.gk-title { font-weight: 700; font-size: 14px; }
+.gk-close {
+  border: 0; background: none; font-size: 16px; line-height: 1;
+  color: #6b7280; cursor: pointer; padding: 0 4px;
+}
+.gk-close:hover { color: #dc2626; }
+.gk-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 4px; }
+.gk-chip {
+  border: 2px solid #1f2937; background: #f9fafb;
+  padding: 2px 8px; font-size: 12px; cursor: pointer;
+}
+.gk-chip.active { background: #2563eb; color: #fff; }
+.gk-rows { max-height: 280px; overflow-y: auto; border: 1px solid #e5e7eb; }
+.gk-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; font-size: 13px;
+  border-bottom: 1px solid #f0f1f3; cursor: pointer;
+}
+.gk-row:last-child { border-bottom: none; }
+.gk-row:hover { background: #eff6ff; }
+.gk-row[data-gk-clickable="0"] { cursor: default; }
+.gk-row[data-gk-clickable="0"]:hover { background: none; }
+.gk-tag { flex-shrink: 0; }
+.gk-body { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gk-meta { flex-shrink: 0; font-size: 11px; color: #6b7280; }
+.gk-queued { background: #f3f4f6; color: #4b5563; }
+.gk-running { background: #dbeafe; color: #1d4ed8; }
+.gk-done { background: #dcfce7; color: #15803d; }
+.gk-failed { background: #fee2e2; color: #b91c1c; }
+.gk-canceled { background: #f3f4f6; color: #9ca3af; }
+/* S25: kanban row inline cancel button (pixel danger style, same palette as .btn.small.danger) */
+.gk-cancel {
+  flex: 0 0 auto;
+  border: 2px solid #dc2626; background: #fff; color: #dc2626;
+  padding: 1px 8px; font-size: 12px; cursor: pointer;
+}
+.gk-cancel:hover { background: #fee2e2; }
+/* S27: kanban row inline reassign button (pixel secondary style) + inline reassign picker */
+.gk-reassign {
+  flex: 0 0 auto;
+  border: 2px solid #2563eb; background: #fff; color: #2563eb;
+  padding: 1px 8px; font-size: 12px; cursor: pointer;
+}
+.gk-reassign:hover { background: #dbeafe; }
+.gk-reassign-inline { display: inline-flex; align-items: center; gap: 3px; }
+.gk-reassign-inline select { font-size: 11px; max-width: 96px; }
+.gk-empty { font-size: 13px; color: #9ca3af; padding: 16px 4px; }
+/* S29: kanban project filter dropdown (right side of the chip row) */
+.gk-project {
+  margin-left: auto; font-size: 12px; padding: 2px 6px;
+  border: 1px solid #e5e7eb; border-radius: 4px; background: #fff;
+  color: #374151; cursor: pointer;
+}
+/* S29: kanban row-level project tag (right after the status tag) */
+.gk-proj {
+  flex-shrink: 0; font-size: 11px; padding: 0 5px;
+  border: 1px solid #c7d2fe; border-radius: 3px;
+  background: #eef2ff; color: #4338ca;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;
+}
+/* task-duration-artifacts A: kanban row inline "Details" button (pixel secondary style, same as .gk-reassign) */
+.gk-detail {
+  flex: 0 0 auto;
+  border: 2px solid #6b7280; background: #fff; color: #374151;
+  padding: 1px 8px; font-size: 12px; cursor: pointer;
+}
+.gk-detail:hover { background: #f3f4f6; }
+/* task-duration-artifacts A: task detail dialog (pixel style, same pattern as .gk-*; z-index below the kanban's 131) */
+.td-overlay {
+  position: fixed; inset: 0; z-index: 129;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+.td-card {
+  width: min(460px, 92vw); max-height: 80vh; overflow-y: auto;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 4px 4px 0 #1f2937;
+  padding: 12px;
+}
+.td-grid {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 12px;
+  margin: 10px 0; font-size: 13px;
+}
+.td-section { margin: 8px 0; font-size: 13px; }
+.td-pre {
+  margin: 4px 0 0; padding: 6px 8px; font-size: 12px;
+  background: #f9fafb; border: 1px solid #e5e7eb;
+  white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow-y: auto;
+}
+.td-arts { list-style: none; margin: 4px 0 0; padding: 0; }
+.td-art { padding: 4px 0; border-bottom: 1px solid #f0f1f3; font-size: 13px; }
+.td-art:last-child { border-bottom: none; }
+.td-art-link { color: #2563eb; text-decoration: none; font-weight: 600; }
+.td-art-link:hover { text-decoration: underline; }
+.td-art-meta { display: block; font-size: 11px; color: #6b7280; margin-top: 1px; }
+.conv-tabs { display: flex; gap: 6px; padding: 0 10px 8px; }
+/* S38: pixel-ify the unread/all tabs (right angles + hard border + hard shadow) */
+.conv-tabs button {
+  flex: 1; padding: 5px 0; font-size: 12px; border: 2px solid #1f2937;
+  background: #fff; border-radius: 0; cursor: pointer; color: #555;
+  box-shadow: 2px 2px 0 #1f2937;
+}
+.conv-tabs button:active { transform: translate(2px, 2px); box-shadow: none; }
+.conv-tabs button.active { background: #2563eb; border-color: #1f2937; color: #fff; }
+/* S19-C: unified search — hide the all/unread tabs while search results are shown */
+.chat-pane.searching .conv-tabs { display: none; }
+.sr-section {
+  padding: 8px 10px 4px; font-size: 11px; color: #9ca3af;
+  border-top: 1px solid #e5e7eb;
+}
+#conv-list { flex: 1; overflow-y: auto; }
+.conv {
+  display: flex; gap: 8px; padding: 10px;
+  border-bottom: 1px solid #f0f1f3; cursor: pointer;
+}
+.conv:hover { background: #f9fafb; }
+.conv.active { background: #eef2ff; }
+.conv-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: #374151; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; flex-shrink: 0;
+}
+
+/* deterministic pixel avatars served from /avatars/<name>.svg (S11) */
+.ava {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  overflow: hidden; background: #374151; color: #fff; font-weight: 700;
+  flex-shrink: 0; border-radius: 50%;
+}
+.ava img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; image-rendering: pixelated;
+}
+#rail-avatar .ava { width: 100%; height: 100%; font-size: 14px; }
+.ava.conv-ava { width: 36px; height: 36px; font-size: 14px; }
+.ava.meta-ava { width: 16px; height: 16px; font-size: 9px; }
+/* S15: settings account card avatar row (all platforms; the only avatar entry after the mobile rail is hidden) */
+.ava.set-ava { width: 40px; height: 40px; font-size: 16px; }
+.conv-main { flex: 1; min-width: 0; }
+.conv-top { display: flex; align-items: center; gap: 6px; }
+.conv-name {
+  font-weight: 600; font-size: 14px; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.conv-preview {
+  font-size: 12px; color: #6b7280; margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.conv-time { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+/* S38: pixelated unread badge (right angles + hard border) */
+.badge {
+  background: #dc2626; color: #fff; border-radius: 0; font-size: 11px;
+  padding: 1px 7px; min-width: 18px; text-align: center;
+  border: 1px solid #1f2937; box-shadow: 1px 1px 0 #1f2937;
+}
+.task-chip {
+  font-size: 11px; color: #92400e; background: #fef3c7;
+  border-radius: 8px; padding: 1px 6px; margin-left: 4px;
+}
+/* S20: mention badges — "Mentioned" in the conversation list, "Mentions you" in bubble meta. */
+.tag.mention-tag { background: #fee2e2; color: #dc2626; font-weight: 600; }
+.tag.mention-flag { background: #fee2e2; color: #991b1b; }
+/* S33: pinned tag (pinned rows in the main list / pinned groups in the ignored section) */
+.tag.pin-tag { background: #e0e7ff; color: #4338ca; font-weight: 600; }
+/* S33: per-conversation pin button — small pixel style, appears on hover on desktop, always shown on mobile (media query) */
+.conv { position: relative; }
+.conv-pin {
+  position: absolute; top: 5px; right: 5px;
+  width: 22px; height: 22px; font-size: 12px; line-height: 1;
+  border-width: 1px; box-shadow: 1px 1px 0 #1f2937;
+  visibility: hidden;
+}
+.conv:hover > .conv-pin { visibility: visible; }
+
+/* thread */
+.thread-pane { flex: 1; min-width: 0; display: flex; flex-direction: column; background: #f5f7fa; }
+.thread { display: none; flex-direction: column; flex: 1; min-height: 0; }
+.thread.open { display: flex; }
+.thread-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: #9ca3af;
+}
+.thread-empty.gone { display: none; }
+.thread-head {
+  padding: 12px 16px; background: #fff; border-bottom: 1px solid #e5e7eb;
+  font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;
+}
+/* S24: ellipsis for long group names, so the right-side "Tasks" and "…" buttons are not squeezed out (mobile 390px viewport). */
+.thread-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.thread-msgs { flex: 1; overflow-y: auto; padding: 16px; }
+.bubble-row { margin-bottom: 12px; }
+.bubble-row.mine { display: flex; flex-direction: column; align-items: flex-end; }
+/* S12b: theirs bubbles fit content width (mirrors .mine, left-aligned);
+   without this the block-level .bubble stretches full width. */
+.bubble-row.theirs { display: flex; flex-direction: column; align-items: flex-start; }
+.bubble-meta { font-size: 11px; color: #9ca3af; margin: 0 4px 3px; }
+/* S19-B: read receipts on messages I sent — single ✓ = unread, ✓✓ = read. */
+.msg-read { margin-left: 5px; letter-spacing: -2px; font-size: 11px; color: #9ca3af; }
+.msg-read.is-read { color: #22c55e; }
+.bubble {
+  max-width: 640px; padding: 8px 12px; border-radius: 10px; font-size: 13px;
+  white-space: pre-wrap; word-break: break-word;
+}
+.bubble-mine { background: #dbeafe; color: #1e3a8a; }
+.bubble-theirs { background: #f3f4f6; border: 1px solid #e5e7eb; }
+.mention { color: #2563eb; font-weight: 600; }
+.msg-actions { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* S16: reply quote box (the "> " line at the start of the message body); clickable jump to the original message when data-jump is present.
+   No fixed width; adapts to the bubble automatically on mobile. */
+.msg-quote {
+  border: 2px solid #cbd5e1; border-left: 3px solid #2563eb;
+  border-radius: 4px; background: #f8fafc; padding: 4px 8px; margin-bottom: 6px;
+  font-size: 13px; color: #475569;
+}
+.msg-quote[data-jump] { cursor: pointer; }
+.msg-quote[data-jump]:hover { background: #eef2ff; }
+.msg-quote-sender { color: #94a3b8; font-size: 11px; }
+/* S16.1: non-editable quote preview box above the composer (appears when "Reply" is clicked, dismissed with ×). */
+.composer-quote {
+  display: flex; align-items: flex-start; gap: 6px;
+  border: 2px solid #cbd5e1; border-left: 3px solid #2563eb;
+  border-radius: 4px; background: #f8fafc; padding: 4px 8px; margin-bottom: 8px;
+}
+.composer-quote[hidden] { display: none; }
+.composer-quote-label { color: #2563eb; font-weight: 600; font-size: 12px; flex: 0 0 auto; }
+.composer-quote-text {
+  flex: 1 1 auto; font-size: 13px; color: #475569;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.composer-quote-close {
+  flex: 0 0 auto; border: 0; background: none; cursor: pointer;
+  font-size: 14px; line-height: 1.2; color: #64748b; padding: 0 2px;
+}
+.composer-quote-close:hover { color: #dc2626; }
+/* S16: highlight pulse on the jump-target bubble (box-shadow, does not override the bubble's background). */
+.bubble.flash { animation: bubble-flash 1.5s ease-in-out; }
+@keyframes bubble-flash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0); }
+  50% { box-shadow: 0 0 0 4px #fde68a; }
+}
+
+/* composer */
+.composer { background: #fff; border-top: 1px solid #e5e7eb; padding: 10px 16px; }
+.composer textarea { width: 100%; margin-bottom: 8px; resize: vertical; }
+.composer .form-row { justify-content: space-between; }
+/* S22: in-group dispatch target dropdown (next to the message type, shown only when kind=dispatch) */
+#composer-dispatch-to { max-width: 180px; }
+#composer-dispatch-to[hidden] { display: none; }
+/* S29: in-group dispatch project dropdown (same visibility as the target dropdown) */
+#composer-dispatch-project { max-width: 160px; }
+#composer-dispatch-project[hidden] { display: none; }
+/* S34: @ autocomplete dropdown (floating above the composer textarea, pixel style 2px hard border) */
+.composer-ta-wrap { position: relative; }
+.at-menu {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  margin-bottom: 4px;
+  min-width: 160px;
+  max-width: 320px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border: 2px solid #1f2937;
+  box-shadow: 3px 3px 0 rgba(31, 41, 55, 0.15);
+  z-index: 60;
+}
+.at-item {
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #1f2937;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.at-item + .at-item { border-top: 1px solid #f3f4f6; }
+.at-item.active,
+.at-item:hover { background: #dbeafe; color: #1e3a8a; }
+
+/* S12: pixel attachment buttons (square, 2px hard border, 2px hard shadow) */
+.pix-btns { display: flex; gap: 6px; align-items: center; }
+.pix-btn {
+  width: 32px; height: 32px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: #1f2937;
+  border: 2px solid #1f2937; border-radius: 0;
+  box-shadow: 2px 2px 0 #1f2937;
+  cursor: pointer;
+}
+.pix-btn:hover { background: #f3f4f6; }
+.pix-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1f2937; }
+.pix-btn svg { width: 18px; height: 18px; }
+
+/* S12: pending attachment previews above the composer textarea */
+.attach-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.attach-item {
+  position: relative; width: 76px; box-sizing: border-box;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 2px 2px 0 #1f2937;
+  padding: 4px 4px 6px;
+}
+.attach-thumb, .attach-chip {
+  width: 60px; height: 60px; object-fit: cover;
+  display: flex; align-items: center; justify-content: center;
+  background: #f3f4f6; color: #1f2937;
+}
+.attach-chip svg { width: 22px; height: 22px; }
+.attach-name {
+  display: block; margin-top: 3px; font-size: 11px; color: #6b7280;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.attach-status { display: block; font-size: 10px; color: #2563eb; margin-top: 1px; }
+.attach-status.err { color: #b91c1c; }
+.attach-x {
+  position: absolute; top: -8px; right: -8px; width: 18px; height: 18px;
+  padding: 0; line-height: 14px; text-align: center; font-size: 12px;
+  background: #fff; color: #1f2937; border: 2px solid #1f2937; border-radius: 0;
+  cursor: pointer;
+}
+
+/* S12: attachments inside message bubbles */
+.msg-files { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.msg-files:only-child { margin-top: 0; }
+.attach-link { display: inline-block; }
+.msg-thumb {
+  display: block; max-width: 220px; max-height: 160px;
+  border: 2px solid #1f2937;
+}
+.msg-file-chip {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 260px;
+  background: #fff; border: 2px solid #1f2937; box-shadow: 2px 2px 0 #1f2937;
+  padding: 4px 8px; color: #1f2937; text-decoration: none;
+}
+.msg-file-chip:hover { background: #f3f4f6; }
+.msg-file-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+.chip-name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 12px; font-weight: 600;
+}
+.chip-size { font-size: 11px; color: #6b7280; flex-shrink: 0; }
+
+/* ---------- shared components ---------- */
+.card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  padding: 12px; margin-bottom: 12px;
+}
+.card h3 { margin: 0 0 8px; font-size: 15px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #f0f1f3; }
+th { background: #f9fafb; color: #555; }
+.srv-add-row input { width: 100%; }
+.srv-token-mask { letter-spacing: 1px; color: #6b7280; user-select: none; }
+.srv-token-none { color: #9ca3af; }
+.srv-copy {
+  border: none; background: none; padding: 2px 4px; margin-left: 2px;
+  cursor: pointer; color: #6b7280; vertical-align: middle; line-height: 1;
+}
+.srv-copy:hover { color: #2563eb; }
+.form-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+input, select, textarea {
+  padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;
+}
+/* S38: pixelate the primary button system (same .pix-btn language: right angles + hard border + hard shadow + press offset) */
+button.btn {
+  padding: 6px 12px; border: 2px solid #1f2937; background: #2563eb;
+  color: #fff; border-radius: 0; cursor: pointer; font-size: 13px;
+  box-shadow: 2px 2px 0 #1f2937;
+}
+button.btn:active { transform: translate(2px, 2px); box-shadow: none; }
+button.btn.secondary { background: #fff; color: #2563eb; border-color: #2563eb; box-shadow: 2px 2px 0 #2563eb; }
+button.btn.secondary:active { transform: translate(2px, 2px); box-shadow: none; }
+button.btn.danger { background: #fff; color: #dc2626; border-color: #dc2626; box-shadow: 2px 2px 0 #dc2626; }
+button.btn.danger:active { transform: translate(2px, 2px); box-shadow: none; }
+button.btn.small { padding: 2px 8px; font-size: 12px; }
+.tag {
+  display: inline-block; padding: 1px 8px; border-radius: 10px;
+  font-size: 12px; background: #eef2ff; color: #3730a3;
+}
+.tag.online { background: #dcfce7; color: #166534; }
+.tag.offline { background: #f3f4f6; color: #6b7280; }
+.tag.queued { background: #fef3c7; color: #92400e; }
+.tag.running { background: #dbeafe; color: #1e40af; }
+.tag.done { background: #dcfce7; color: #166534; }
+.tag.failed { background: #fee2e2; color: #991b1b; }
+.tag.canceled { background: #f3f4f6; color: #6b7280; }
+.tag.channel-tag { background: #ccfbf1; color: #0f766e; }
+/* boot diagnostic: visible until core.js has executed (S11b blank-page aid) */
+#boot-wait {
+  position: fixed; inset: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: center;
+  background: #f5f7fa; color: #6b7280; font-size: 14px;
+}
+#toast {
+  position: fixed; right: 16px; bottom: 16px; z-index: 99;
+  background: #111827; color: #fff; padding: 10px 14px; border-radius: 6px;
+  font-size: 13px; display: none; max-width: 320px;
+}
+.token-box {
+  background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 6px;
+  padding: 10px; font-family: monospace; font-size: 13px; word-break: break-all;
+}
+#canvas-wrap {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  overflow: auto; position: relative;
+}
+svg.wflow { display: block; min-width: 100%; }
+.wf-node rect { fill: #eef2ff; stroke: #2563eb; stroke-width: 1.5; cursor: grab; }
+.wf-node text { font-size: 12px; fill: #1f2937; pointer-events: none; }
+.wf-edge { stroke: #6b7280; stroke-width: 1.5; cursor: pointer; }
+.wf-edge.selected { stroke: #dc2626; stroke-width: 2.5; }
+/* S13: custom right-click menu on message bubbles (pixel style: square + 2px
+   hard border + 2px hard shadow, matches .pix-btn) */
+.ctx-menu {
+  position: fixed; z-index: 120; min-width: 132px;
+  max-height: min(70vh, 400px); overflow-y: auto; /* S37 M1: long target lists scroll */
+  background: #fff; border: 2px solid #1f2937; box-shadow: 3px 3px 0 #1f2937;
+  padding: 4px;
+}
+.ctx-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 7px 10px; font-size: 13px; color: #1f2937;
+  background: none; border: 0; cursor: pointer; text-align: left;
+}
+.ctx-item:hover { background: #e5e7eb; }
+.ctx-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ctx-title {
+  font-size: 11px; color: #6b7280; padding: 4px 10px 3px;
+  max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.msg {
+  border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; margin-bottom: 8px;
+  background: #fff;
+}
+.msg .from { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+.msg .body { font-size: 13px; white-space: pre-wrap; }
+.msg .actions { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+.muted { color: #9ca3af; }
+.error { color: #dc2626; font-size: 13px; }
+
+/* ---------- S15: phone screen adaptation ----------
+   The breakpoint must match the matchMedia expression in core.js isMobile() (max-width: 767px).
+   Desktop (>=768px) sees no changes: #bottom-nav / #thread-back are already display:none at the top of the file. */
+@media (max-width: 767px) {
+  #rail { display: none; }
+
+  /* bottom-fixed nav: sticks to the bottom, z-index 30 (the thread overlay at 40 covers it) */
+  #bottom-nav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    height: calc(52px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: #111827; border-top: 2px solid #312e81;
+  }
+  .nav-btn {
+    flex: 1; min-width: 0; padding: 0; border: none; background: none;
+    color: #9ca3af; font-size: 13px; cursor: pointer;
+  }
+  .nav-btn.active { color: #fff; box-shadow: inset 0 2px 0 #2563eb; }
+  .nav-btn[hidden] { display: none; }
+
+  /* main area yields the nav height so admin/settings content is not obscured */
+  #main { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
+  .login-card { width: min(360px, 92vw); }
+
+  /* chat: default page = full-width conversation list */
+  .chat-pane { width: 100%; border-right: none; }
+  .thread-pane { display: none; }
+  /* m-thread (openThread adds the class on mobile): the thread as a full-screen overlay covering the bottom nav */
+  #block-chat.m-thread .chat-pane { display: none; }
+  #block-chat.m-thread .thread-pane {
+    display: flex; position: fixed; inset: 0; z-index: 40; background: #fff;
+  }
+  #thread-back { display: inline-flex; }
+  /* S33: no hover on mobile, the pin button is always shown */
+  .conv-pin { visibility: visible; }
+
+  /* servers panel: the 4-column table (name/address/token/actions) is too cramped at 390px -> horizontal scroll fallback,
+     keeping the three add-row inputs usable (desktop unaffected) */
+  .servers-panel { overflow-x: auto; }
+  .servers-panel table { min-width: 560px; }
+}

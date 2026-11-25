@@ -1,0 +1,85 @@
+{
+  "schema": "whatbark-preset/v1",
+  "name": "Law Firm (Sample)",
+  "description": "Law firm practice structure: corporate / criminal / civil & commercial / IP practice groups plus an administration office — 5 departments, 14 AI employees in total.",
+  "departments": [
+    {
+      "name": "Corporate Practice Group",
+      "leader": "corp-partner-oliver",
+      "employees": [
+        { "name": "corp-partner-oliver", "role": "Practice Group Lead / Partner" },
+        { "name": "corp-associate-pamela", "role": "Senior Attorney" },
+        { "name": "corp-associate-quentin", "role": "Attorney" }
+      ]
+    },
+    {
+      "name": "Criminal Defense Group",
+      "leader": "crim-partner-rachel",
+      "employees": [
+        { "name": "crim-partner-rachel", "role": "Practice Group Lead / Partner" },
+        { "name": "crim-associate-stanley", "role": "Attorney" },
+        { "name": "crim-paralegal-tina", "role": "Paralegal" }
+      ]
+    },
+    {
+      "name": "Civil & Commercial Litigation Group",
+      "leader": "civ-partner-ursula",
+      "employees": [
+        { "name": "civ-partner-ursula", "role": "Practice Group Lead / Partner" },
+        { "name": "civ-associate-vincent", "role": "Attorney" },
+        { "name": "civ-paralegal-wendy", "role": "Paralegal" }
+      ]
+    },
+    {
+      "name": "IP & Technology Group",
+      "leader": "ip-partner-xavier",
+      "employees": [
+        { "name": "ip-partner-xavier", "role": "Practice Group Lead / Partner" },
+        { "name": "ip-associate-yvonne", "role": "Patent Attorney" }
+      ]
+    },
+    {
+      "name": "Administration Office",
+      "leader": "admin-zachary",
+      "employees": [
+        { "name": "admin-zachary", "role": "Administration Lead / Office Manager" },
+        { "name": "admin-ada", "role": "Finance & Administration Specialist" },
+        { "name": "admin-brian", "role": "HR Specialist" }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Leadership Collab",
+      "nodes": [
+        "corp-partner-oliver",
+        "crim-partner-rachel",
+        "civ-partner-ursula",
+        "ip-partner-xavier",
+        "admin-zachary"
+      ],
+      "edges": [
+        ["corp-partner-oliver", "crim-partner-rachel"],
+        ["corp-partner-oliver", "civ-partner-ursula"],
+        ["corp-partner-oliver", "ip-partner-xavier"],
+        ["corp-partner-oliver", "admin-zachary"],
+        ["crim-partner-rachel", "corp-partner-oliver"],
+        ["crim-partner-rachel", "civ-partner-ursula"],
+        ["crim-partner-rachel", "ip-partner-xavier"],
+        ["crim-partner-rachel", "admin-zachary"],
+        ["civ-partner-ursula", "corp-partner-oliver"],
+        ["civ-partner-ursula", "crim-partner-rachel"],
+        ["civ-partner-ursula", "ip-partner-xavier"],
+        ["civ-partner-ursula", "admin-zachary"],
+        ["ip-partner-xavier", "corp-partner-oliver"],
+        ["ip-partner-xavier", "crim-partner-rachel"],
+        ["ip-partner-xavier", "civ-partner-ursula"],
+        ["ip-partner-xavier", "admin-zachary"],
+        ["admin-zachary", "corp-partner-oliver"],
+        ["admin-zachary", "crim-partner-rachel"],
+        ["admin-zachary", "civ-partner-ursula"],
+        ["admin-zachary", "ip-partner-xavier"]
+      ]
+    }
+  ]
+}

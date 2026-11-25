@@ -1,0 +1,85 @@
+{
+  "schema": "whatbark-preset/v1",
+  "name": "Finance Company (Sample)",
+  "description": "Securities/asset-management company: investment research, wealth management, risk & compliance, finance & accounting, and operations support — 5 departments, 14 AI employees.",
+  "departments": [
+    {
+      "name": "Investment Research Dept",
+      "leader": "research-alan",
+      "employees": [
+        { "name": "research-alan", "role": "Research Lead / Chief Analyst" },
+        { "name": "research-becca", "role": "Equity Analyst" },
+        { "name": "research-craig", "role": "Fixed Income Analyst" }
+      ]
+    },
+    {
+      "name": "Wealth Management Dept",
+      "leader": "wealth-diana",
+      "employees": [
+        { "name": "wealth-diana", "role": "Wealth Management Lead" },
+        { "name": "wealth-edwin", "role": "Private Wealth Advisor" },
+        { "name": "wealth-fiona", "role": "Family Office Advisor" }
+      ]
+    },
+    {
+      "name": "Risk & Compliance Dept",
+      "leader": "risk-gordon",
+      "employees": [
+        { "name": "risk-gordon", "role": "Risk & Compliance Lead" },
+        { "name": "risk-helen", "role": "Compliance Officer" },
+        { "name": "risk-ian", "role": "Internal Auditor" }
+      ]
+    },
+    {
+      "name": "Finance & Accounting Dept",
+      "leader": "accounting-judy",
+      "employees": [
+        { "name": "accounting-judy", "role": "Finance Lead / General Ledger Accountant" },
+        { "name": "accounting-ken", "role": "Accountant" },
+        { "name": "accounting-lara", "role": "Treasury Operations Specialist" }
+      ]
+    },
+    {
+      "name": "Operations Support Dept",
+      "leader": "ops-marcus",
+      "employees": [
+        { "name": "ops-marcus", "role": "Operations Support Lead" },
+        { "name": "ops-nora", "role": "Marketing & Brand Specialist" }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Leadership Collab",
+      "nodes": [
+        "research-alan",
+        "wealth-diana",
+        "risk-gordon",
+        "accounting-judy",
+        "ops-marcus"
+      ],
+      "edges": [
+        ["research-alan", "wealth-diana"],
+        ["research-alan", "risk-gordon"],
+        ["research-alan", "accounting-judy"],
+        ["research-alan", "ops-marcus"],
+        ["wealth-diana", "research-alan"],
+        ["wealth-diana", "risk-gordon"],
+        ["wealth-diana", "accounting-judy"],
+        ["wealth-diana", "ops-marcus"],
+        ["risk-gordon", "research-alan"],
+        ["risk-gordon", "wealth-diana"],
+        ["risk-gordon", "accounting-judy"],
+        ["risk-gordon", "ops-marcus"],
+        ["accounting-judy", "research-alan"],
+        ["accounting-judy", "wealth-diana"],
+        ["accounting-judy", "risk-gordon"],
+        ["accounting-judy", "ops-marcus"],
+        ["ops-marcus", "research-alan"],
+        ["ops-marcus", "wealth-diana"],
+        ["ops-marcus", "risk-gordon"],
+        ["ops-marcus", "accounting-judy"]
+      ]
+    }
+  ]
+}
